@@ -1,21 +1,21 @@
-from flask import Flask, jsonify, redirect
+import json
+from flask import Flask, jsonify, request
 import requests
 import os
-from mangum import Mangum
 
 app = Flask(__name__)
 
-@app.route('/')
-def home():
-    return redirect('/bus-timings', code=302)
+# Load configuration
+with open('config.json', 'r') as config_file:
+    config = json.load(config_file)
+api_key = config['TFL_API_KEY']
 
 @app.route('/bus-timings', methods=['GET'])
 def bus_timings():
-    app_key = os.getenv('TFL_API_KEY')  # Assume it's set properly
     bus_stop_ids = [('Harrow View West', '490008888S'), ('Harrow View', '490013383E')]
     results = []
     for name, stop_id in bus_stop_ids:
-        url = f"https://api.tfl.gov.uk/StopPoint/{stop_id}/Arrivals?app_key={app_key}"
+        url = f"https://api.tfl.gov.uk/StopPoint/{stop_id}/Arrivals?app_key={api_key}"
         response = requests.get(url)
         if response.status_code == 200:
             buses = sorted(response.json(), key=lambda x: x['timeToStation'])
@@ -25,4 +25,3 @@ def bus_timings():
             results.append({name: "Failed to retrieve data"})
     return jsonify(results)
 
-handler = Mangum(app)
