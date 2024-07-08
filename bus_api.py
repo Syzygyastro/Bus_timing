@@ -1,14 +1,17 @@
 from flask import Flask, jsonify, request
 import requests
 import datetime
+import os  # Import os module to access environment variables
 from mangum import Mangum
 
 app = Flask(__name__)
 
 @app.route('/bus-timings', methods=['GET'])
 def bus_timings():
+    # Retrieve API key from environment variable
+    app_key = os.getenv('TFL_API_KEY', 'default_api_key_if_not_set')  # Provide a default or ensure it's set in the environment
+
     bus_stop_ids = [('Harrow View West', '490008888S'), ('Harrow View', '490013383E')]
-    app_key = 'a7ab5d5787f942c699ffa77f18cc0b82'  # Ensure your API key is kept secure
     results = []
     for name, stop_id in bus_stop_ids:
         url = f"https://api.tfl.gov.uk/StopPoint/{stop_id}/Arrivals?app_key={app_key}"
@@ -21,4 +24,4 @@ def bus_timings():
             results.append({name: "Failed to retrieve data"})
     return jsonify(results)
 
-handler = Mangum(app)
+handler = Mangum(app)  # This makes the Flask app compatible with AWS Lambda and Vercel's serverless platform
