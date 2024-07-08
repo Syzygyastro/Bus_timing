@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 import requests
 import os  # Import os module to access environment variables
 from mangum import Mangum
@@ -8,7 +8,7 @@ app = Flask(__name__)
 @app.route('/bus-timings', methods=['GET'])
 def bus_timings():
     # Retrieve API key from environment variable
-    app_key = os.getenv('TFL_API_KEY', 'default_api_key_if_not_set')  # Provide a default or ensure it's set in the environment
+    app_key = os.getenv('TFL_API_KEY')  # Provide a default or ensure it's set in the environment
 
     bus_stop_ids = [('Harrow View West', '490008888S'), ('Harrow View', '490013383E')]
     results = []
