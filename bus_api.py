@@ -10,8 +10,7 @@ with open('config.json', 'r') as config_file:
     config = json.load(config_file)
 api_key = config['TFL_API_KEY']
 
-@app.route('/bus-timings', methods=['GET'])
-def bus_timings():
+def fetch_bus_timings():
     bus_stop_ids = [('Harrow View West', '490008888S'), ('Harrow View', '490013383E')]
     results = []
     for name, stop_id in bus_stop_ids:
@@ -23,5 +22,9 @@ def bus_timings():
             results.append({name: bus_info})
         else:
             results.append({name: "Failed to retrieve data"})
-    return jsonify(results)
+    return results
 
+@app.route('/', methods=['GET'])
+def home():
+    results = fetch_bus_timings()
+    return jsonify(results)
