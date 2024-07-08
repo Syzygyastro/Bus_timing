@@ -1,6 +1,5 @@
 from flask import Flask, jsonify, request
 import requests
-import datetime
 import os  # Import os module to access environment variables
 from mangum import Mangum
 
