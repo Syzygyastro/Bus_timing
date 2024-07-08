@@ -25,7 +25,7 @@ def fetch_bus_timings():
             results[name] = bus_info
         else:
             results[name] = "Failed to retrieve data"
-    return jsonify(results)
+    return results
 
 @app.route('/', methods=['GET'])
 def home():
