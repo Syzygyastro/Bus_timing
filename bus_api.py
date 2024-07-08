@@ -1,15 +1,17 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect
 import requests
-import os  # Import os module to access environment variables
+import os
 from mangum import Mangum
 
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return redirect('/bus-timings', code=302)
+
 @app.route('/bus-timings', methods=['GET'])
 def bus_timings():
-    # Retrieve API key from environment variable
-    app_key = os.getenv('TFL_API_KEY')  # Provide a default or ensure it's set in the environment
-
+    app_key = os.getenv('TFL_API_KEY')  # Assume it's set properly
     bus_stop_ids = [('Harrow View West', '490008888S'), ('Harrow View', '490013383E')]
     results = []
     for name, stop_id in bus_stop_ids:
@@ -23,4 +25,4 @@ def bus_timings():
             results.append({name: "Failed to retrieve data"})
     return jsonify(results)
 
-handler = Mangum(app)  # This makes the Flask app compatible with AWS Lambda and Vercel's serverless platform
+handler = Mangum(app)
