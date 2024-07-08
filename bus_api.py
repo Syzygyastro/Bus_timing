@@ -10,7 +10,7 @@ with open('config.json', 'r') as config_file:
     config = json.load(config_file)
 api_key = config['TFL_API_KEY']
 
-def bus_timings():
+def fetch_bus_timings():
     bus_stop_ids = {
         'Harrow View West': '490008888S',
         'Harrow View': '490013383E'
